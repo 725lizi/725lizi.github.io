@@ -66,7 +66,7 @@ entry/src/main/ets
 
 ### 1. 专注计时主界面
 
-![Main focus-timer UI of FocusTimer3 application](assets/timer-main.png)
+![Main focus-timer UI of FocusTimer3 application](assets/2026-08-023 103957.png)
 模拟器功能：自定义倒计时时长、启动计时、暂停计时、分布式流转入口按钮。
 
 ### 2. 计时卡片弹窗
