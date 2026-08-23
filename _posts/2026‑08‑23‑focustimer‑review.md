@@ -66,23 +66,25 @@ entry/src/main/ets
 
 ### 1. 专注计时主界面
 
-![Main focus-timer UI of FocusTimer3 application](assets/2026-08-023 103957.png)
+![Main focus‑timer UI of FocusTimer3 application](assets/屏幕截图%202026‑08‑23%20103957.png)
 模拟器功能：自定义倒计时时长、启动计时、暂停计时、分布式流转入口按钮。
 
 ### 2. 计时卡片弹窗
 
-![Floating timer card popup component](assets/timer-card.png)
+![Floating timer card popup component](assets/屏幕截图%202026‑08‑23%20104123.png)
 模拟器功能：弹出计时悬浮卡片，实时显示剩余时间。
 
 ### 3. 周数据统计页面
 
-![Weekly statistics and AI study report page](assets/stats-page.png)
+![Weekly statistics and AI study report page](assets/屏幕截图%202026‑08‑23%20104033.png)
 模拟器功能：展示每周专注时长数据图表、AI生成学习周报、弹窗分享报表。
 
 ### 4. 分布式多设备同步演示
 
-![Multi-simulator distributed data synchronization demo](assets/multi-sim-demo.png)
+![Multi‑simulator distributed data synchronization demo](assets/屏幕截图%202026‑08‑23%20104110.png)
 模拟器功能：鸿蒙分布式数据流转，两台模拟器计时数据实时同步更新。
+
+### 1. 专注计时主界面
 
 
 ## 五、部分核心代码实现（节选）
