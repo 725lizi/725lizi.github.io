@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="700" viewBox="0 0 940 700" font-family="'Segoe UI',Arial,sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#5b6b7b"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="940" height="700" fill="#ffffff"/>
+  <text x="470" y="40" text-anchor="middle" font-size="24" font-weight="700" fill="#1f2d3d">FocusTimer3 Layered Architecture (after Phase 1 refactor)</text>
+  <text x="470" y="66" text-anchor="middle" font-size="13" fill="#7a8794">Dependencies point downward only; the pure-logic layer is UI/device-free and unit-testable offline</text>
+
+  <rect x="150" y="86" width="640" height="78" rx="10" fill="#E8F1FB" stroke="#3B7BBF" stroke-width="1.5"/>
+  <text x="170" y="112" font-size="16" font-weight="700" fill="#235a8f">1. Pages</text>
+  <text x="170" y="138" font-size="13.5" fill="#2b4a66">Index (timer) · Notes · Statistics · Report</text>
+  <text x="170" y="158" font-size="12.5" fill="#5c7186">Only compose components, hold state and orchestrate lifecycle (Index: 782 -&gt; 566 lines)</text>
+  <line x1="470" y1="164" x2="470" y2="186" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="150" y="190" width="640" height="80" rx="10" fill="#E7F6F0" stroke="#2FA983" stroke-width="1.5"/>
+  <text x="170" y="216" font-size="16" font-weight="700" fill="#1f7f61">2. Components (10)</text>
+  <text x="170" y="240" font-size="13" fill="#2b5e50">Shared BottomNavBar + 9 home widgets (timer ring, duration, subject, today stats...)</text>
+  <text x="170" y="260" font-size="12.5" fill="#4c7a6c">Props down, callbacks up -&gt; one-way data flow; components never mutate state directly</text>
+  <line x1="470" y1="270" x2="470" y2="292" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="150" y="296" width="640" height="98" rx="10" fill="#FFF4E0" stroke="#E09A2E" stroke-width="1.8"/>
+  <text x="170" y="322" font-size="16" font-weight="700" fill="#a9701a">3. Pure Logic / Domain (no UI, no device)</text>
+  <text x="170" y="346" font-size="13" fill="#7a5818">TimerEngine state machine · LearningAnalysisService rule engine (scoring &amp; weekly report)</text>
+  <text x="170" y="366" font-size="13" fill="#7a5818">CardDataBuilder card formatting · FocusMode / Sedentary business rules</text>
+  <text x="170" y="386" font-size="12.5" fill="#9a7520">Deterministic output for given input -&gt; verified offline in milliseconds; main target of unit tests</text>
+  <rect x="636" y="306" width="140" height="24" rx="12" fill="#E09A2E"/>
+  <text x="706" y="323" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">74 offline unit cases</text>
+  <line x1="470" y1="394" x2="470" y2="416" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="150" y="420" width="640" height="74" rx="10" fill="#EAF0F3" stroke="#5B7C8C" stroke-width="1.5"/>
+  <text x="170" y="446" font-size="16" font-weight="700" fill="#3f5c6b">4. Repository</text>
+  <text x="170" y="470" font-size="13" fill="#43606e">FocusSessionStore: single entry point for reading/writing focus records (facade + delegation)</text>
+  <text x="170" y="488" font-size="12.5" fill="#617985">Pages ask for data, never knowing where it lives; storage can be swapped behind this layer</text>
+  <line x1="470" y1="494" x2="470" y2="516" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="150" y="520" width="640" height="86" rx="10" fill="#F2F3F5" stroke="#8A94A6" stroke-width="1.5"/>
+  <text x="170" y="546" font-size="16" font-weight="700" fill="#566070">5. Platform / Storage</text>
+  <text x="170" y="570" font-size="13" fill="#5c6572">preferences KV store · relationalStore database · SensorServiceKit sensors</text>
+  <text x="170" y="590" font-size="13" fill="#5c6572">FormKit widget · distributedDataObject cross-device continuation</text>
+
+  <line x1="150" y1="628" x2="790" y2="628" stroke="#d9dee4" stroke-width="1"/>
+  <text x="150" y="652" font-size="12.5" fill="#7a8794">Quality gates: small Git commits -&gt; cloud CI repo checks -&gt; DevEco full local compile (type check) -&gt; hypium unit tests -&gt; emulator/device</text>
+  <text x="150" y="674" font-size="12.5" fill="#7a8794">Phase 2 adds an LLM implementation in layer 3: DeepSeek streaming online, automatic fallback to the rule engine offline, same interface</text>
+</svg>

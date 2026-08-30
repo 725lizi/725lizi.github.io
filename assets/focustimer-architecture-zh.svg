@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="700" viewBox="0 0 940 700" font-family="'Microsoft YaHei','PingFang SC','Segoe UI',sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#5b6b7b"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="940" height="700" fill="#ffffff"/>
+  <text x="470" y="40" text-anchor="middle" font-size="24" font-weight="700" fill="#1f2d3d">FocusTimer3 分层架构（阶段 1 重构后）</text>
+  <text x="470" y="66" text-anchor="middle" font-size="13" fill="#7a8794">依赖只能向下；纯逻辑层不碰 UI 与系统能力，可离线单元测试</text>
+
+  <!-- L1 页面层 -->
+  <rect x="150" y="86" width="640" height="78" rx="10" fill="#E8F1FB" stroke="#3B7BBF" stroke-width="1.5"/>
+  <text x="170" y="112" font-size="16" font-weight="700" fill="#235a8f">① 页面层 Pages</text>
+  <text x="170" y="138" font-size="13.5" fill="#2b4a66">Index 计时首页 · Notes 笔记 · Statistics 统计 · Report 分析报告</text>
+  <text x="170" y="158" font-size="12.5" fill="#5c7186">只负责：拼装组件、持有状态、生命周期编排（首页由 782 行降到 566 行）</text>
+  <line x1="470" y1="164" x2="470" y2="186" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- L2 组件层 -->
+  <rect x="150" y="190" width="640" height="80" rx="10" fill="#E7F6F0" stroke="#2FA983" stroke-width="1.5"/>
+  <text x="170" y="216" font-size="16" font-weight="700" fill="#1f7f61">② 组件层 Components（10 个）</text>
+  <text x="170" y="240" font-size="13" fill="#2b5e50">BottomNavBar 公共导航 + 计时环 / 时长档位 / 科目 / 今日统计等 9 个首页组件</text>
+  <text x="170" y="260" font-size="12.5" fill="#4c7a6c">props 向下传数据 · 回调向上抛动作 → 单向数据流，组件不偷改状态</text>
+  <line x1="470" y1="270" x2="470" y2="292" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- L3 纯逻辑层 -->
+  <rect x="150" y="296" width="640" height="98" rx="10" fill="#FFF4E0" stroke="#E09A2E" stroke-width="1.8"/>
+  <text x="170" y="322" font-size="16" font-weight="700" fill="#a9701a">③ 纯逻辑 / 领域层（不依赖 UI 与设备）</text>
+  <text x="170" y="346" font-size="13" fill="#7a5818">TimerEngine 计时状态机 · LearningAnalysisService 规则引擎（三维评分/周报）</text>
+  <text x="170" y="366" font-size="13" fill="#7a5818">CardDataBuilder 卡片格式化 · FocusMode / Sedentary 业务规则</text>
+  <text x="170" y="386" font-size="12.5" fill="#9a7520">同样输入必得同样输出 → 毫秒级离线验证，是单元测试的主要对象</text>
+  <rect x="640" y="306" width="132" height="24" rx="12" fill="#E09A2E"/>
+  <text x="706" y="323" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">可离线单测 74 例</text>
+  <line x1="470" y1="394" x2="470" y2="416" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- L4 仓库层 -->
+  <rect x="150" y="420" width="640" height="74" rx="10" fill="#EAF0F3" stroke="#5B7C8C" stroke-width="1.5"/>
+  <text x="170" y="446" font-size="16" font-weight="700" fill="#3f5c6b">④ 仓库层 Repository</text>
+  <text x="170" y="470" font-size="13" fill="#43606e">FocusSessionStore：专注记录读写的唯一入口（门面 + 委托）</text>
+  <text x="170" y="488" font-size="12.5" fill="#617985">页面只说“要什么数据”，不关心数据存在哪；以后换存储只改这一层</text>
+  <line x1="470" y1="494" x2="470" y2="516" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- L5 平台层 -->
+  <rect x="150" y="520" width="640" height="86" rx="10" fill="#F2F3F5" stroke="#8A94A6" stroke-width="1.5"/>
+  <text x="170" y="546" font-size="16" font-weight="700" fill="#566070">⑤ 系统能力 / 存储层 Platform</text>
+  <text x="170" y="570" font-size="13" fill="#5c6572">preferences 轻量存储 · relationalStore 关系数据库 · SensorServiceKit 传感器</text>
+  <text x="170" y="590" font-size="13" fill="#5c6572">FormKit 桌面卡片 · distributedDataObject 跨设备接续</text>
+
+  <!-- 底部说明 -->
+  <line x1="150" y1="628" x2="790" y2="628" stroke="#d9dee4" stroke-width="1"/>
+  <text x="150" y="652" font-size="12.5" fill="#7a8794">质量门禁：Git 小步提交 → 云端 CI 做仓库规范校验 → DevEco 本地完整编译（类型检查）→ hypium 单元测试 → 模拟器/真机验证</text>
+  <text x="150" y="674" font-size="12.5" fill="#7a8794">阶段 2 将在③层新增“大模型实现”：有网走 DeepSeek 流式生成，无网自动回退规则引擎，对外接口保持不变</text>
+</svg>
