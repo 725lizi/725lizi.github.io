@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="1000" viewBox="0 0 1020 1000" font-family="'Microsoft YaHei','PingFang SC','Segoe UI',sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#5b6b7b"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1020" height="1000" fill="#ffffff"/>
+  <text x="510" y="38" text-anchor="middle" font-size="24" font-weight="700" fill="#1f2d3d">FocusTimer3 整体架构（阶段 1 工程重构 → 阶段 2 AI 周报 → 阶段 3 端侧 RAG）</text>
+  <text x="510" y="62" text-anchor="middle" font-size="13" fill="#7a8794">依赖只能向下调用；橙色领域层全部为纯逻辑、可离线单测（累计 168 例），紫色设备层做薄、走真机验证</text>
+
+  <!-- L1 页面层 -->
+  <rect x="120" y="82" width="780" height="76" rx="10" fill="#E8F1FB" stroke="#3B7BBF" stroke-width="1.5"/>
+  <text x="140" y="108" font-size="16" font-weight="700" fill="#235a8f">① 页面层 Pages（@Entry，只持有状态、拼装组件、编排生命周期）</text>
+  <text x="140" y="132" font-size="12.5" fill="#2b4a66">Index 计时首页 · Statistics 统计（AI 周报 + 知识库入口）· Notes 笔记 · KnowledgeBase 知识库问答</text>
+  <text x="140" y="150" font-size="12.5" fill="#2b4a66">Report 分析报告 · EncryptedFolder 加密文件夹 · DeviceWhitelist 设备白名单 · Continuation 跨端接续</text>
+  <line x1="510" y1="158" x2="510" y2="178" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- L2 组件层 -->
+  <rect x="120" y="182" width="780" height="70" rx="10" fill="#E7F6F0" stroke="#2FA983" stroke-width="1.5"/>
+  <text x="140" y="208" font-size="16" font-weight="700" fill="#1f7f61">② 组件层 Components（props 向下、回调向上，单向数据流）</text>
+  <text x="140" y="232" font-size="12.5" fill="#2b5e50">BottomNavBar · TimerRingSection 计时环 · DurationSelector 时长档位 · SubjectChips 科目 · TodayStatsCard 今日统计</text>
+  <text x="140" y="248" font-size="12.5" fill="#2b5e50">DailyGoalCard 目标 · FocusModeToggle 专注模式 · AmbientLightCard 光线 · IndexHeader · OfflineBanner</text>
+  <line x1="510" y1="252" x2="510" y2="272" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- L3 领域层大框 -->
+  <rect x="120" y="276" width="780" height="312" rx="10" fill="#FFF4E0" stroke="#E09A2E" stroke-width="1.8"/>
+  <text x="140" y="302" font-size="16" font-weight="700" fill="#a9701a">③ 领域 / 纯逻辑层（同样输入必得同样输出，不碰 UI 与系统 → 单元测试主战场，168 例）</text>
+
+  <!-- L3-a 计时与规则 -->
+  <rect x="140" y="316" width="236" height="256" rx="8" fill="#FFFBEF" stroke="#E0B25C" stroke-width="1.2"/>
+  <text x="152" y="338" font-size="13.5" font-weight="700" fill="#8a6418">计时 / 业务规则</text>
+  <text x="152" y="362" font-size="12" fill="#7a5818">TimerEngine 计时状态机</text>
+  <text x="152" y="384" font-size="12" fill="#7a5818">LearningAnalysisService</text>
+  <text x="152" y="402" font-size="11" fill="#9a7a30">　三维评分 / 规则周报</text>
+  <text x="152" y="424" font-size="12" fill="#7a5818">SubjectTagModel 科目</text>
+  <text x="152" y="446" font-size="12" fill="#7a5818">FocusMode / Sedentary</text>
+  <text x="152" y="464" font-size="11" fill="#9a7a30">　专注 / 久坐规则</text>
+  <text x="152" y="486" font-size="12" fill="#7a5818">CardDataBuilder 卡片</text>
+  <text x="152" y="508" font-size="12" fill="#7a5818">MarkdownLite 轻渲染</text>
+  <text x="152" y="540" font-size="11" fill="#9a7a30">阶段 1 沉淀，全部可离线测</text>
+
+  <!-- L3-b AI 服务线 -->
+  <rect x="392" y="316" width="236" height="256" rx="8" fill="#EEF3FB" stroke="#5B86C8" stroke-width="1.2"/>
+  <text x="404" y="338" font-size="13.5" font-weight="700" fill="#2f5ea0">AI 周报服务线 services/ai</text>
+  <text x="404" y="362" font-size="12" fill="#34567f">AiReportOrchestrator 编排</text>
+  <text x="404" y="382" font-size="11.5" fill="#5a7699">　先备规则兜底再请求</text>
+  <text x="404" y="404" font-size="12" fill="#34567f">ReportPromptBuilder 提示词</text>
+  <text x="404" y="426" font-size="12" fill="#34567f">ReportStrategy 三条件决策</text>
+  <text x="404" y="448" font-size="12" fill="#34567f">SseChunkParser 流式半包</text>
+  <text x="404" y="470" font-size="12" fill="#34567f">HttpErrorMapper 错误归类</text>
+  <text x="404" y="492" font-size="12" fill="#34567f">DeepSeekClient 流式收发</text>
+  <text x="404" y="514" font-size="12" fill="#34567f">ApiKeyStore / NetState</text>
+  <text x="404" y="540" font-size="11.5" fill="#5a7699">阶段 2：流式 + 优雅降级</text>
+
+  <!-- L3-c RAG 服务线 -->
+  <rect x="644" y="316" width="240" height="256" rx="8" fill="#F1EEFB" stroke="#7C6BD8" stroke-width="1.2"/>
+  <text x="656" y="338" font-size="13.5" font-weight="700" fill="#5446a8">端侧 RAG 服务线 services/rag</text>
+  <text x="656" y="362" font-size="12" fill="#574d96">TextChunker 中文切块</text>
+  <text x="656" y="384" font-size="12" fill="#574d96">EmbeddingClient/Parser</text>
+  <text x="656" y="404" font-size="11.5" fill="#7a70b0">　BGE 1024 维向量化</text>
+  <text x="656" y="426" font-size="12" fill="#574d96">VectorMath/Store/Retriever</text>
+  <text x="656" y="446" font-size="11.5" fill="#7a70b0">　本地 Top-K 余弦检索</text>
+  <text x="656" y="468" font-size="12" fill="#574d96">RagQaPlanner 防幻觉闸门</text>
+  <text x="656" y="488" font-size="11.5" fill="#7a70b0">　阈值/预算/引用聚合</text>
+  <text x="656" y="510" font-size="12" fill="#574d96">RagIndex/QaService/Runtime</text>
+  <text x="656" y="540" font-size="11.5" fill="#7a70b0">阶段 3：只依据本人笔记作答</text>
+
+  <line x1="510" y1="588" x2="510" y2="608" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- L4 数据/仓库层 -->
+  <rect x="120" y="612" width="780" height="76" rx="10" fill="#EAF0F3" stroke="#5B7C8C" stroke-width="1.5"/>
+  <text x="140" y="638" font-size="16" font-weight="700" fill="#3f5c6b">④ 数据 / 仓库层 Repository（上层只说要什么，不关心存哪）</text>
+  <text x="140" y="662" font-size="12.5" fill="#43606e">DatabaseHelper 关系库统一入口 · FocusSessionStore 专注记录 · VectorRepository 向量块表 rag_vector_chunk</text>
+  <text x="140" y="680" font-size="12.5" fill="#43606e">preferences 沙箱（AI Key / 向量化 Key 分开存）· OfflineCacheManager 离线缓存</text>
+  <line x1="510" y1="688" x2="510" y2="708" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- L5 系统能力/设备层 -->
+  <rect x="120" y="712" width="780" height="118" rx="10" fill="#F3EEF7" stroke="#8E7CC3" stroke-width="1.5"/>
+  <text x="140" y="738" font-size="16" font-weight="700" fill="#6a57a0">⑤ 系统能力 / 设备层（薄封装真实鸿蒙能力，靠真机走查，逻辑已下沉到③）</text>
+  <text x="140" y="762" font-size="12.5" fill="#6a5d8c">光线传感器 AmbientLight · 跨端接续 ContinuationManager · 日历 CalendarSyncManager · 久坐提醒 SedentaryReminder</text>
+  <text x="140" y="784" font-size="12.5" fill="#6a5d8c">生物识别/加密 SecurityManager · 专注设备白名单 DeviceWhitelist · 桌面卡片 Form(EntryFormAbility)</text>
+  <text x="140" y="806" font-size="12.5" fill="#6a5d8c">网络 @kit.NetworkKit（普通请求 + requestInStream 流式）· 分享 ShareManager · EntryAbility 启动装配</text>
+
+  <!-- 底部结论条 -->
+  <rect x="120" y="852" width="780" height="118" rx="10" fill="#F6F8FA" stroke="#C4CDD5" stroke-width="1.2"/>
+  <text x="140" y="878" font-size="13.5" font-weight="700" fill="#1f2d3d">这套分层换来什么（面试一句话版）</text>
+  <text x="140" y="902" font-size="12.5" fill="#46586a">· 可测：判断逻辑全在③纯逻辑层，168 个单测离线毫秒级跑；⑤设备层薄到只做“调系统 API + 转发已测结果”，不硬造 mock。</text>
+  <text x="140" y="924" font-size="12.5" fill="#46586a">· 可换：AI 面向 OpenAI 兼容协议、RAG 向量化厂商可配、存储经仓库层隔离，换模型/换存储只改一处，上层不动。</text>
+  <text x="140" y="946" font-size="12.5" fill="#46586a">· 可演进：规则引擎 → 大模型 → 端侧 RAG 三条能力线在同一分层下逐步叠加，老功能零侵入（混合智能架构）。</text>
+</svg>
