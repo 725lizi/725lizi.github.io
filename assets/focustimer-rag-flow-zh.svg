@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="940" viewBox="0 0 980 940" font-family="'Microsoft YaHei','PingFang SC','Segoe UI',sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#5b6b7b"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="980" height="940" fill="#ffffff"/>
+  <text x="490" y="38" text-anchor="middle" font-size="24" font-weight="700" fill="#1f2d3d">FocusTimer3 端侧 RAG 知识库：索引构建与问答检索数据流</text>
+  <text x="490" y="62" text-anchor="middle" font-size="13" fill="#7a8794">绿色＝完全本地离线（毫秒级、不花流量）　紫色＝需要联网　橙色＝本地持久化存储　全链路 168 个单元测试锁定纯逻辑</text>
+
+  <!-- 图例 -->
+  <rect x="250" y="76" width="14" height="14" rx="3" fill="#E7F6F0" stroke="#2FA983"/>
+  <text x="270" y="88" font-size="12" fill="#4c7a6c">本地离线</text>
+  <rect x="360" y="76" width="14" height="14" rx="3" fill="#EEEAFB" stroke="#6C5CE7"/>
+  <text x="380" y="88" font-size="12" fill="#5b54a0">需要联网</text>
+  <rect x="470" y="76" width="14" height="14" rx="3" fill="#FFF4E0" stroke="#E09A2E"/>
+  <text x="490" y="88" font-size="12" fill="#9a7520">本地存储</text>
+  <rect x="580" y="76" width="14" height="14" rx="3" fill="#E8F1FB" stroke="#3B7BBF"/>
+  <text x="600" y="88" font-size="12" fill="#2b4a66">处理步骤</text>
+
+  <!-- ===== A 索引构建 ===== -->
+  <text x="60" y="120" font-size="15" font-weight="700" fill="#a9701a">① 索引构建（笔记新增 / 更新 / 手动重建时执行一次）</text>
+
+  <rect x="260" y="132" width="460" height="50" rx="10" fill="#E8F1FB" stroke="#3B7BBF" stroke-width="1.5"/>
+  <text x="490" y="155" text-anchor="middle" font-size="14.5" font-weight="700" fill="#235a8f">本地笔记（仅未加密，保护隐私）</text>
+  <text x="490" y="174" text-anchor="middle" font-size="12" fill="#5c7186">标题 + 正文，带来源 id / 标题 / 时间</text>
+  <line x1="490" y1="182" x2="490" y2="200" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="260" y="204" width="460" height="50" rx="10" fill="#E7F6F0" stroke="#2FA983" stroke-width="1.5"/>
+  <text x="490" y="227" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1f7f61">中文切块 TextChunker（本地）</text>
+  <text x="490" y="246" text-anchor="middle" font-size="12" fill="#4c7a6c">按中文句末标点切句 · 贪心装箱 · 每块≤220字 · 相邻块重叠30字 · 超长硬切兜底</text>
+  <line x1="490" y1="254" x2="490" y2="272" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="260" y="276" width="460" height="50" rx="10" fill="#EEEAFB" stroke="#6C5CE7" stroke-width="1.5"/>
+  <text x="490" y="299" text-anchor="middle" font-size="14.5" font-weight="700" fill="#5b3fa8">分批向量化 Embedding（联网 · 非流式）</text>
+  <text x="490" y="318" text-anchor="middle" font-size="12" fill="#6b65a8">每批≤16块 · OpenAI 兼容 · 默认 BAAI/bge-large-zh-v1.5 · 每块输出 1024 维向量</text>
+  <line x1="490" y1="326" x2="490" y2="344" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="260" y="348" width="460" height="50" rx="10" fill="#E8F1FB" stroke="#3B7BBF" stroke-width="1.5"/>
+  <text x="490" y="371" text-anchor="middle" font-size="14.5" font-weight="700" fill="#235a8f">对齐组装 IndexAssembler（块数＝向量数，错配即报错）</text>
+  <text x="490" y="390" text-anchor="middle" font-size="12" fill="#5c7186">同一来源先删旧再写新（原子重建，避免重复命中）</text>
+  <line x1="490" y1="398" x2="490" y2="416" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- 共享存储 -->
+  <rect x="200" y="420" width="580" height="62" rx="10" fill="#FFF4E0" stroke="#E09A2E" stroke-width="1.8"/>
+  <text x="490" y="445" text-anchor="middle" font-size="14.5" font-weight="700" fill="#a9701a">向量块存储（单一数据源）</text>
+  <text x="490" y="467" text-anchor="middle" font-size="12.5" fill="#9a7520">内存 VectorStore（检索用，写入即同步） ＋ 关系库表 rag_vector_chunk（向量以 JSON 持久化，source_id 索引，重启 hydrate 回内存）</text>
+
+  <!-- ===== B 问答 ===== -->
+  <line x1="490" y1="482" x2="490" y2="500" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="60" y="516" font-size="15" font-weight="700" fill="#5b3fa8">② 问答检索（每次提问执行）</text>
+
+  <rect x="260" y="528" width="460" height="46" rx="10" fill="#E8F1FB" stroke="#3B7BBF" stroke-width="1.5"/>
+  <text x="490" y="556" text-anchor="middle" font-size="14.5" font-weight="700" fill="#235a8f">用户提问</text>
+  <line x1="490" y1="574" x2="490" y2="592" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="260" y="596" width="460" height="46" rx="10" fill="#EEEAFB" stroke="#6C5CE7" stroke-width="1.5"/>
+  <text x="490" y="618" text-anchor="middle" font-size="14" font-weight="700" fill="#5b3fa8">加 BGE 查询前缀 → 查询向量化（联网，仅 1 次请求）</text>
+  <text x="490" y="636" text-anchor="middle" font-size="11.5" fill="#6b65a8">“为这个句子生成表示以用于检索相关文章：” + 问题</text>
+  <line x1="490" y1="642" x2="490" y2="660" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="260" y="664" width="460" height="46" rx="10" fill="#E7F6F0" stroke="#2FA983" stroke-width="1.5"/>
+  <text x="490" y="686" text-anchor="middle" font-size="14" font-weight="700" fill="#1f7f61">本地 Top-K 余弦检索（完全离线）</text>
+  <text x="490" y="704" text-anchor="middle" font-size="11.5" fill="#4c7a6c">与内存库逐块算余弦相似度 · 过滤负相关/维度不符 · 降序取 Top5（1000块约1ms）</text>
+  <line x1="490" y1="710" x2="490" y2="728" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="260" y="732" width="460" height="52" rx="10" fill="#FFF7E6" stroke="#D9A421" stroke-width="1.5"/>
+  <text x="490" y="754" text-anchor="middle" font-size="14.5" font-weight="700" fill="#9a7412">防幻觉规划闸门 RagQaPlanner（本地纯逻辑）</text>
+  <text x="490" y="774" text-anchor="middle" font-size="11.5" fill="#a9842a">最高相似度&lt;0.2 判 no_evidence · 否则按1200字预算装材料 · 聚合来源引用</text>
+
+  <!-- 分支 -->
+  <line x1="380" y1="784" x2="380" y2="806" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="600" y1="784" x2="600" y2="806" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="150" y="810" width="420" height="98" rx="10" fill="#EEEAFB" stroke="#6C5CE7" stroke-width="1.5"/>
+  <text x="360" y="834" text-anchor="middle" font-size="14" font-weight="700" fill="#5b3fa8">grounded 有依据</text>
+  <text x="360" y="856" text-anchor="middle" font-size="12" fill="#6b65a8">系统提示约束“只依据材料、标[材料n]”</text>
+  <text x="360" y="876" text-anchor="middle" font-size="12" fill="#6b65a8">→ DeepSeek 流式生成（联网，温度0.3）</text>
+  <text x="360" y="896" text-anchor="middle" font-size="12.5" font-weight="700" fill="#5b3fa8">逐字回答 ＋ 蓝色来源笔记标签</text>
+
+  <rect x="600" y="810" width="300" height="98" rx="10" fill="#E7F6F0" stroke="#2FA983" stroke-width="1.5"/>
+  <text x="750" y="838" text-anchor="middle" font-size="14" font-weight="700" fill="#1f7f61">no_evidence 无依据</text>
+  <text x="750" y="862" text-anchor="middle" font-size="12" fill="#4c7a6c">先诚实声明“笔记里没找到”</text>
+  <text x="750" y="884" text-anchor="middle" font-size="12" fill="#4c7a6c">再给标注为“通用建议”的回答</text>
+  <text x="750" y="904" text-anchor="middle" font-size="12" fill="#4c7a6c">绝不假装引用个人笔记</text>
+</svg>

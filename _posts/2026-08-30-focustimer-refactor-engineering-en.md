@@ -57,7 +57,7 @@ That substitution point is an **interface-driven, swappable design**: callers on
 
 Refactoring is not a rewrite. I worked toward a target architecture where dependencies point only downward, and lower layers never know about upper ones:
 
-![FocusTimer3 layered architecture](assets/focustimer-architecture-en.svg)
+![FocusTimer3 layered architecture](/assets/focustimer-architecture-en.svg)
 
 ### 3.1 Kill duplication first: a shared bottom navigation
 

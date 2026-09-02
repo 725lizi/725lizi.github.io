@@ -59,7 +59,7 @@ lang: zh
 
 重构不是“推倒重写”，而是有明确的目标分层。我希望最终依赖方向只能自上而下，下层不知道上层的存在：
 
-![FocusTimer3 分层架构图](assets/focustimer-architecture-zh.svg)
+![FocusTimer3 分层架构图](/assets/focustimer-architecture-zh.svg)
 
 ### 3.1 先消灭重复：抽公共底部导航
 

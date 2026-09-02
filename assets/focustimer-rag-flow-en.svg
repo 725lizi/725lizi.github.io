@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="940" viewBox="0 0 980 940" font-family="'Segoe UI',Arial,sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#5b6b7b"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="980" height="940" fill="#ffffff"/>
+  <text x="490" y="38" text-anchor="middle" font-size="23" font-weight="700" fill="#1f2d3d">On-Device RAG Knowledge Base: Indexing &amp; Retrieval Data Flow</text>
+  <text x="490" y="62" text-anchor="middle" font-size="13" fill="#7a8794">Green = fully on-device/offline (milliseconds, no traffic) · Purple = network required · Orange = local persistence · 168 unit tests</text>
+
+  <rect x="250" y="76" width="14" height="14" rx="3" fill="#E7F6F0" stroke="#2FA983"/>
+  <text x="270" y="88" font-size="12" fill="#4c7a6c">Offline</text>
+  <rect x="340" y="76" width="14" height="14" rx="3" fill="#EEEAFB" stroke="#6C5CE7"/>
+  <text x="360" y="88" font-size="12" fill="#5b54a0">Network</text>
+  <rect x="450" y="76" width="14" height="14" rx="3" fill="#FFF4E0" stroke="#E09A2E"/>
+  <text x="470" y="88" font-size="12" fill="#9a7520">Storage</text>
+  <rect x="560" y="76" width="14" height="14" rx="3" fill="#E8F1FB" stroke="#3B7BBF"/>
+  <text x="580" y="88" font-size="12" fill="#2b4a66">Step</text>
+
+  <text x="60" y="120" font-size="15" font-weight="700" fill="#a9701a">① Indexing (run once when notes change / on manual rebuild)</text>
+
+  <rect x="260" y="132" width="460" height="50" rx="10" fill="#E8F1FB" stroke="#3B7BBF" stroke-width="1.5"/>
+  <text x="490" y="155" text-anchor="middle" font-size="14.5" font-weight="700" fill="#235a8f">Local notes (unencrypted only — privacy first)</text>
+  <text x="490" y="174" text-anchor="middle" font-size="12" fill="#5c7186">title + body, with source id / title / timestamp</text>
+  <line x1="490" y1="182" x2="490" y2="200" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="260" y="204" width="460" height="50" rx="10" fill="#E7F6F0" stroke="#2FA983" stroke-width="1.5"/>
+  <text x="490" y="227" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1f7f61">Chinese chunking TextChunker (offline)</text>
+  <text x="490" y="246" text-anchor="middle" font-size="12" fill="#4c7a6c">split on CJK punctuation · greedy packing · ≤220 chars/chunk · 30-char overlap · hard-cut fallback</text>
+  <line x1="490" y1="254" x2="490" y2="272" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="260" y="276" width="460" height="50" rx="10" fill="#EEEAFB" stroke="#6C5CE7" stroke-width="1.5"/>
+  <text x="490" y="299" text-anchor="middle" font-size="14.5" font-weight="700" fill="#5b3fa8">Batched embedding (network, non-streaming)</text>
+  <text x="490" y="318" text-anchor="middle" font-size="12" fill="#6b65a8">≤16 chunks/request · OpenAI-compatible · BAAI/bge-large-zh-v1.5 · 1024-dim vector per chunk</text>
+  <line x1="490" y1="326" x2="490" y2="344" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="260" y="348" width="460" height="50" rx="10" fill="#E8F1FB" stroke="#3B7BBF" stroke-width="1.5"/>
+  <text x="490" y="371" text-anchor="middle" font-size="14" font-weight="700" fill="#235a8f">Align &amp; assemble (chunk count must equal vector count)</text>
+  <text x="490" y="390" text-anchor="middle" font-size="12" fill="#5c7186">delete-then-insert per source = atomic rebuild, no duplicate hits</text>
+  <line x1="490" y1="398" x2="490" y2="416" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="200" y="420" width="580" height="62" rx="10" fill="#FFF4E0" stroke="#E09A2E" stroke-width="1.8"/>
+  <text x="490" y="445" text-anchor="middle" font-size="14.5" font-weight="700" fill="#a9701a">Vector store (single source of truth)</text>
+  <text x="490" y="467" text-anchor="middle" font-size="12" fill="#9a7520">in-memory VectorStore for search ＋ relational table rag_vector_chunk (vectors as JSON, source_id index; hydrate on launch)</text>
+
+  <line x1="490" y1="482" x2="490" y2="500" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="60" y="516" font-size="15" font-weight="700" fill="#5b3fa8">② Retrieval &amp; QA (per question)</text>
+
+  <rect x="260" y="528" width="460" height="46" rx="10" fill="#E8F1FB" stroke="#3B7BBF" stroke-width="1.5"/>
+  <text x="490" y="556" text-anchor="middle" font-size="14.5" font-weight="700" fill="#235a8f">User question</text>
+  <line x1="490" y1="574" x2="490" y2="592" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="260" y="596" width="460" height="46" rx="10" fill="#EEEAFB" stroke="#6C5CE7" stroke-width="1.5"/>
+  <text x="490" y="618" text-anchor="middle" font-size="13.5" font-weight="700" fill="#5b3fa8">Prepend BGE query instruction → embed query (network, 1 request)</text>
+  <text x="490" y="636" text-anchor="middle" font-size="11.5" fill="#6b65a8">instruction prefix (recommended by BGE) is added to queries, not to documents</text>
+  <line x1="490" y1="642" x2="490" y2="660" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="260" y="664" width="460" height="46" rx="10" fill="#E7F6F0" stroke="#2FA983" stroke-width="1.5"/>
+  <text x="490" y="686" text-anchor="middle" font-size="14" font-weight="700" fill="#1f7f61">Local Top-K cosine retrieval (fully offline)</text>
+  <text x="490" y="704" text-anchor="middle" font-size="11.5" fill="#4c7a6c">cosine vs in-memory chunks · drop negative/mismatched-dim · sort, take Top5 (~1ms / 1000 chunks)</text>
+  <line x1="490" y1="710" x2="490" y2="728" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="260" y="732" width="460" height="52" rx="10" fill="#FFF7E6" stroke="#D9A421" stroke-width="1.5"/>
+  <text x="490" y="754" text-anchor="middle" font-size="14" font-weight="700" fill="#9a7412">Anti-hallucination gate RagQaPlanner (pure logic)</text>
+  <text x="490" y="774" text-anchor="middle" font-size="11.5" fill="#a9842a">top score &lt; 0.2 → no_evidence; else pack context within 1200 chars &amp; aggregate citations</text>
+
+  <line x1="380" y1="784" x2="380" y2="806" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="600" y1="784" x2="600" y2="806" stroke="#5b6b7b" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="150" y="810" width="420" height="98" rx="10" fill="#EEEAFB" stroke="#6C5CE7" stroke-width="1.5"/>
+  <text x="360" y="834" text-anchor="middle" font-size="14" font-weight="700" fill="#5b3fa8">grounded (evidence found)</text>
+  <text x="360" y="856" text-anchor="middle" font-size="12" fill="#6b65a8">system prompt: answer ONLY from material, cite [n]</text>
+  <text x="360" y="876" text-anchor="middle" font-size="12" fill="#6b65a8">→ DeepSeek streaming generation (network, temp 0.3)</text>
+  <text x="360" y="896" text-anchor="middle" font-size="12.5" font-weight="700" fill="#5b3fa8">token-by-token answer ＋ blue source-note chips</text>
+
+  <rect x="600" y="810" width="300" height="98" rx="10" fill="#E7F6F0" stroke="#2FA983" stroke-width="1.5"/>
+  <text x="750" y="838" text-anchor="middle" font-size="14" font-weight="700" fill="#1f7f61">no_evidence</text>
+  <text x="750" y="862" text-anchor="middle" font-size="12" fill="#4c7a6c">honestly state "not found in your notes"</text>
+  <text x="750" y="884" text-anchor="middle" font-size="12" fill="#4c7a6c">then give advice labelled "general"</text>
+  <text x="750" y="904" text-anchor="middle" font-size="12" fill="#4c7a6c">never fake a personal citation</text>
+</svg>
