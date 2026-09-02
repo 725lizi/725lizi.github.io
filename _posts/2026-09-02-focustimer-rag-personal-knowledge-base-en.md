@@ -130,7 +130,18 @@ Industrial RAG deals in millions/ billions of vectors and needs ANN indexes like
 | local Top-5 retrieval | 1000 chunks × 1024-d | 1.07 ms |
 | local Top-5 retrieval | 2000 chunks × 1024-d | 2.40 ms |
 
-Even at two thousand knowledge chunks, local retrieval takes a couple of milliseconds, is **fully offline and costs no traffic**; the only network round-trips in a query are embedding the question and generating the answer. (Absolute numbers on the ArkTS runtime differ, but the order of magnitude holds; real on-device network timings will be added after device walkthrough rather than guessed.) This is a deliberate **complexity-matches-scale** decision — don't introduce a heavy component you can't maintain until linear scan actually becomes the bottleneck (YAGNI).
+Even at two thousand knowledge chunks, local retrieval takes a couple of milliseconds, is **fully offline and costs no traffic**; the only network round-trips in a query are embedding the question and generating the answer. This is a deliberate **complexity-matches-scale** decision — don't introduce a heavy component you can't maintain until linear scan actually becomes the bottleneck (YAGNI).
+
+I added lightweight timing logs (a single `[RAG-Perf]` prefix, filterable in DevEco's HiLog) and measured the network part on a real device walkthrough (emulator, SiliconFlow BGE + DeepSeek, 2026-09-02):
+
+| On-device stage | Scale / result | Time |
+|---|---|---|
+| Rebuild index (read+chunk+embed+persist) | 1 note / 2 chunks | 735 ms |
+| Query embedding (network) + local retrieval + planning | 2 hits, mode=grounded | 464 ms |
+| Send → first token (TTFT) | —— | 1327 ms |
+| Full answer completed | 141 chars | 2105 ms |
+
+Compared with the offline table above, the latency breakdown is clear: **local chunking/retrieval is sub-millisecond to a few milliseconds, and almost all user-perceived wait comes from the two network round-trips.** Query embedding plus local retrieval and planning took 464ms; the first token appeared at 1.3s and the complete answer at 2.1s, which feels smooth with token streaming. The `mode=grounded, used=2` log line is direct evidence that the answer was grounded in *my own two note chunks* rather than a generic response.
 
 ### 6.3 In-memory + relational: single source of truth, survives restart
 
