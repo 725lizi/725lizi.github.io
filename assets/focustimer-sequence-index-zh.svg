@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="860" viewBox="0 0 1020 860" font-family="'Microsoft YaHei','PingFang SC','Segoe UI',sans-serif">
+  <defs>
+    <marker id="ar3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#3d4c5c"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1020" height="860" fill="#ffffff"/>
+  <text x="510" y="34" text-anchor="middle" font-size="22" font-weight="700" fill="#1f2d3d">时序图③  点「重建知识库」，笔记是怎么一步步变成可检索向量的（RAG 写入侧 · 阶段 3）</text>
+  <text x="510" y="56" text-anchor="middle" font-size="12.5" fill="#7a8794">提问侧见时序图②；本图只画“索引构建”。核心：本地切块/组装、只在向量化时联网、同篇事务覆盖、加密笔记不入库</text>
+
+  <g stroke="#b9c4cf" stroke-width="1.3" stroke-dasharray="5,4">
+    <line x1="90" y1="100" x2="90" y2="786"/>
+    <line x1="258" y1="100" x2="258" y2="786"/>
+    <line x1="426" y1="100" x2="426" y2="786"/>
+    <line x1="594" y1="100" x2="594" y2="786"/>
+    <line x1="762" y1="100" x2="762" y2="786"/>
+    <line x1="930" y1="100" x2="930" y2="786"/>
+  </g>
+  <g font-size="13" font-weight="700" text-anchor="middle">
+    <rect x="20" y="60" width="140" height="40" rx="8" fill="#E8F1FB" stroke="#3B7BBF"/><text x="90" y="78" fill="#235a8f">知识库页 UI</text><text x="90" y="94" font-size="10.5" font-weight="400" fill="#5b7a97">KnowledgeBase</text>
+    <rect x="188" y="60" width="140" height="40" rx="8" fill="#FFF4E0" stroke="#E09A2E"/><text x="258" y="78" fill="#a9701a">RAG 门面</text><text x="258" y="94" font-size="10.5" font-weight="400" fill="#b08a3e">RagRuntime(单例)</text>
+    <rect x="356" y="60" width="140" height="40" rx="8" fill="#F1EEFB" stroke="#7C6BD8"/><text x="426" y="78" fill="#5446a8">索引流水线</text><text x="426" y="94" font-size="10.5" font-weight="400" fill="#7d70b8">RagIndexService</text>
+    <rect x="524" y="60" width="140" height="40" rx="8" fill="#E7F6F0" stroke="#2FA983"/><text x="594" y="78" fill="#1f7f61">本地纯逻辑</text><text x="594" y="94" font-size="10.5" font-weight="400" fill="#4f9a82">切块/分批/组装</text>
+    <rect x="692" y="60" width="140" height="40" rx="8" fill="#E3F4EF" stroke="#1F9E89"/><text x="762" y="78" fill="#157a68">向量化(联网)</text><text x="762" y="94" font-size="10.5" font-weight="400" fill="#4f9a8c">Embedding·BGE</text>
+    <rect x="860" y="60" width="140" height="40" rx="8" fill="#EAF0F3" stroke="#5B7C8C"/><text x="930" y="78" fill="#3f5c6b">本地存储</text><text x="930" y="94" font-size="10.5" font-weight="400" fill="#6f8b99">笔记表/向量表/内存</text>
+  </g>
+
+  <g font-size="12" fill="#2b3a4a">
+    <!-- self check -->
+    <path d="M90,118 h40 v20 h-34" fill="none" stroke="#3B7BBF" stroke-width="1.5" marker-end="url(#ar3)"/>
+    <text x="140" y="132">① 校验向量化 Key；上 rebuilding 锁，防止重复点击并发重建</text>
+
+    <line x1="90" y1="166" x2="924" y2="166" stroke="#3d4c5c" stroke-width="1.5" marker-end="url(#ar3)"/>
+    <text x="507" y="158" text-anchor="middle">② 只查未加密笔记 is_encrypted=0，按更新时间排序（加密笔记不向量化，保护隐私）</text>
+  </g>
+
+  <!-- loop band -->
+  <rect x="30" y="182" width="960" height="392" rx="8" fill="none" stroke="#A99BE0" stroke-width="1.4" stroke-dasharray="7,5"/>
+  <rect x="44" y="172" width="330" height="20" rx="4" fill="#F3EFFB"/>
+  <text x="52" y="186" font-size="11.5" font-weight="700" fill="#5446a8">对每一篇非空笔记，循环执行下面这一串 ↓</text>
+
+  <g font-size="12" fill="#2b3a4a">
+    <line x1="90" y1="216" x2="252" y2="216" stroke="#3d4c5c" stroke-width="1.5" marker-end="url(#ar3)"/>
+    <text x="171" y="208" text-anchor="middle">③ buildIndex(标题+正文, 来源信息)</text>
+    <line x1="258" y1="252" x2="420" y2="252" stroke="#3d4c5c" stroke-width="1.5" marker-end="url(#ar3)"/>
+    <text x="339" y="244" text-anchor="middle">indexDocument(传入同一个内存库)</text>
+
+    <line x1="426" y1="288" x2="588" y2="288" stroke="#3d4c5c" stroke-width="1.5" marker-end="url(#ar3)"/>
+    <text x="507" y="280" text-anchor="middle">④ TextChunker 中文切块：每块≤220字、相邻重叠30字</text>
+    <line x1="588" y1="324" x2="432" y2="324" stroke="#6b7a89" stroke-width="1.3" stroke-dasharray="5,4" marker-end="url(#ar3)"/>
+    <text x="510" y="316" text-anchor="middle" fill="#5a6b7b">返回文本块（若为空=删除该篇旧索引）</text>
+
+    <path d="M426,340 h44 v20 h-38" fill="none" stroke="#7C6BD8" stroke-width="1.5" marker-end="url(#ar3)"/>
+    <text x="480" y="354" fill="#5446a8">⑤ BatchPlanner 按每批 16 块分组，减少联网请求次数</text>
+
+    <line x1="426" y1="392" x2="756" y2="392" stroke="#3d4c5c" stroke-width="1.5" marker-end="url(#ar3)"/>
+    <text x="591" y="384" text-anchor="middle">⑥ 逐批联网 embed（文档块不加“检索前缀”）</text>
+    <line x1="756" y1="428" x2="432" y2="428" stroke="#6b7a89" stroke-width="1.3" stroke-dasharray="5,4" marker-end="url(#ar3)"/>
+    <text x="594" y="420" text-anchor="middle" fill="#5a6b7b">返回每块 1024 维向量，按批次顺序拼回、保证不错位</text>
+
+    <line x1="426" y1="466" x2="588" y2="466" stroke="#3d4c5c" stroke-width="1.5" marker-end="url(#ar3)"/>
+    <text x="507" y="458" text-anchor="middle">⑦ IndexAssembler 对齐“文本块↔向量”，校验数量与维度</text>
+    <line x1="588" y1="502" x2="432" y2="502" stroke="#6b7a89" stroke-width="1.3" stroke-dasharray="5,4" marker-end="url(#ar3)"/>
+    <text x="510" y="494" text-anchor="middle" fill="#5a6b7b">返回组装好的向量块（对不齐就抛错中止）</text>
+
+    <line x1="426" y1="540" x2="924" y2="540" stroke="#3d4c5c" stroke-width="1.6" marker-end="url(#ar3)"/>
+    <text x="675" y="532" text-anchor="middle">⑧ replaceSource：同一篇“先删旧、再插新”事务覆盖，并同步内存库（当次即可检索）</text>
+  </g>
+
+  <g font-size="12">
+    <line x1="924" y1="600" x2="96" y2="600" stroke="#1f7f61" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#ar3)"/>
+    <text x="510" y="592" text-anchor="middle" fill="#1f7f61">⑨ 全部遍历完，刷新“已收录 M 段”，界面逐篇显示进度</text>
+    <path d="M90,616 h44 v20 h-38" fill="none" stroke="#3B7BBF" stroke-width="1.5" marker-end="url(#ar3)"/>
+    <text x="144" y="630">⑩ 埋点 [RAG-Perf] rebuild done（真机：1 篇 2 块 = 735ms），解除 rebuilding 锁</text>
+  </g>
+
+  <!-- error band -->
+  <rect x="36" y="648" width="948" height="50" rx="6" fill="#FDF1F0" stroke="#E0A39E"/>
+  <text x="48" y="669" font-size="11.5" font-weight="700" fill="#b45046">异常路径</text>
+  <text x="130" y="669" font-size="12" fill="#b45046">任一步失败 → 打印 rebuild failed、提示“检查网络或 Key”；finally 里关闭结果集并解锁，不会卡死界面</text>
+  <text x="130" y="688" font-size="12" fill="#b45046">（已处理的篇目前面已落盘，下次重建按 sourceId 覆盖，不会产生重复块）</text>
+
+  <!-- startup band -->
+  <rect x="36" y="710" width="948" height="52" rx="6" fill="#EEF8F3" stroke="#8FCBB2"/>
+  <text x="48" y="731" font-size="11.5" font-weight="700" fill="#1f7f61">冷启动补充</text>
+  <text x="130" y="731" font-size="12" fill="#1f7f61">App 启动时 EntryAbility 调 RagRuntime.hydrate()：从向量表 loadAll 回内存库，重启后无需重建也能立刻检索</text>
+  <text x="130" y="750" font-size="12" fill="#1f7f61">这就是“持久化在关系库、检索在内存”的双份设计：磁盘保数据、内存保速度。</text>
+
+  <text x="510" y="792" text-anchor="middle" font-size="12" fill="#7a8794">面试一句话：写入侧把确定性的切块/分批/对齐都放本地纯逻辑、只在向量化时联网，按来源事务覆盖、加密不入库、启动回灌，保证索引可重复、不重复、可恢复。</text>
+  <text x="510" y="814" text-anchor="middle" font-size="12" fill="#7a8794">和时序图②（提问侧）合起来，就是 RAG 的完整闭环：先把知识“装进库”，再在提问时“取出来用”。</text>
+</svg>
