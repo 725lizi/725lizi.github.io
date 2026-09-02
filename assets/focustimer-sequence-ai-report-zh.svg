@@ -44,11 +44,11 @@
   </g>
 
   <!-- branch 1: not satisfied -->
-  <rect x="36" y="316" width="948" height="46" rx="6" fill="#F4F6F8" stroke="#C4CDD5"/>
-  <text x="48" y="335" font-size="11.5" font-weight="700" fill="#6b7785">分支① 三条件不满足</text>
+  <rect x="36" y="312" width="948" height="56" rx="6" fill="#F4F6F8" stroke="#C4CDD5"/>
+  <text x="48" y="331" font-size="11.5" font-weight="700" fill="#6b7785">分支① 三条件不满足</text>
   <g font-size="12">
-    <line x1="252" y1="350" x2="96" y2="350" stroke="#6b7a89" stroke-width="1.3" stroke-dasharray="5,4" marker-end="url(#ar)"/>
-    <text x="174" y="344" text-anchor="middle" fill="#46586a">直接显示规则版，标签「规则周报」，不联网</text>
+    <line x1="252" y1="356" x2="96" y2="356" stroke="#6b7a89" stroke-width="1.3" stroke-dasharray="5,4" marker-end="url(#ar)"/>
+    <text x="300" y="350" text-anchor="middle" fill="#46586a">直接显示规则版，标签「规则周报」，不联网</text>
   </g>
 
   <!-- normal path to cloud -->
